@@ -1,0 +1,6 @@
+.idea
+/*.htaccess
+composer.lock
+*.log
+runtime
+

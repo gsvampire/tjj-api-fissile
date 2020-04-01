@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>支付宝专享ID</title>
+    <link href="https://fissilestatic.taojiji.com/common/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .pad{
+            padding-top: 10px;
+        }
+        .align{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4 pad">
+            <h2 class="align">支付宝专享ID</h2>
+            <form action="">
+                <textarea name="" id="data" cols="30" rows="10">{$data}</textarea>
+                <div >
+                    <button type="button" class="btn btn-primary" id="addData">提交数据</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="https://fissilestatic.taojiji.com/common/js/jquery-3.3.1.min.js"></script>
+<script src="https://fissilestatic.taojiji.com/common/js/bootstrap.min.js"></script>
+<script>
+    var localUrl=location.origin
+
+
+    function isInteger(x) {
+        x = x*1;
+        return (typeof x === 'number') && (x % 1 === 0);
+    }
+
+    function params(goods_id,sort){
+        if(!isInteger(goods_id) || !isInteger(sort)){
+            alert('数据异常');
+            return;
+        }
+        if((goods_id).toString().length>11 || (sort).toString().length>11){
+            alert('数据长度异常');
+            return;
+        }
+    }
+
+    var add = document.getElementById('addData');
+    add.onclick = function(){
+        var  goods_id = document.getElementById('data').value;
+        if(confirm('会覆盖原有数据哦,请确认是否要更新？')){
+            send(goods_id)
+        }
+    }
+
+
+    function send(goods_id){
+        $.ajax({
+            type:'post',
+            url:localUrl+'/index.php/index/Goods/newAdd',
+            data: {
+                goods_id: goods_id
+            },
+            dataType: 'json',
+            success:function(data){
+                if(data.result==1){
+                    alert(data.message);
+                    window.location.replace(localUrl+'/index.php/index/Goods/idsList');
+                }else{
+                    alert(data.message);
+                }
+            },
+            error:function(){
+                alert('ajax错误请重试'.error);
+            }
+        });
+    }
+
+
+</script>
+
+</body>
+
+</html>

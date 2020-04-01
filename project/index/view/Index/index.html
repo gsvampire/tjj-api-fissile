@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>支付宝专享ID</title>
+    <link href="https://fissilestatic.taojiji.com/common/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .pad{
+            padding-top: 10px;
+        }
+        .align{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h1 class="align">支付宝专享ID</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1 col-md-offset-9">
+            <button class="btn btn-success button" data-toggle="modal" data-target="#addModal">
+                <!--<span class="glyphicon glyphicon-plus"></span>-->
+                新增</button>
+        </div>
+        <div class="col-md-8 col-md-offset-2 pad">
+            <table class="table table-hover table-striped table-bordered" >
+                <tr class="success">
+                    <th class="align">ID</th>
+                    <th class="align">商品ID</th>
+                    <th class="align">排序</th>
+                    <th class="align"></th>
+                </tr>
+                <!--循环数据start-->
+                {volist name="data" id="v"}
+                <tr>
+                    <td class="align">{$v.id}</td>
+                    <td class="align">{$v.goods_id}</td>
+                    <td class="align">{$v.sort}</td>
+                    <td class="align">
+                        <button onclick="changeUrl(this)" class="btn btn-info btn-sm" data-toggle="modal" data-target="#editModal" value={$v.sort} editId="{$v.id}" title="{$v.goods_id}"><span class=""></span>修改</button>
+
+                        <button onclick="delUrl(this)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" value={$v.goods_id} delId="{$v.id}"><span class=""></span>删除</button>
+                    </td>
+                </tr>
+                {/volist}
+                <!--循环数据end-->
+            </table>
+
+        </div>
+
+
+    </div>
+
+    <!--新增-->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel"><b>新增数据</b></h4>
+                </div>
+                <div class="modal-body">
+                    <b>商品ID：</b>
+                    <input type="text" class="form-control" id="inputGoodsId" name="checkUrl"
+                           placeholder="请输入商品ID">
+                    <p></p>
+                    <b>排序：</b>
+                    <input type="text" class="form-control" id="inputSort" name="checkUrl"
+                           placeholder="请输入排序">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="addData">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--修改  modal-->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="editModalLabel"><b>修改数据</b></h4>
+                </div>
+                <div class="modal-body">
+                    <b>商品ID：</b>
+                    <input type="text" class="form-control" id="editTitle" name="checkUrl"
+                           placeholder="请输入商品ID">
+                    <p></p>
+                    <b>排序：</b>
+                    <input type="text" class="form-control" id="editUrl" name="checkUrl"
+                           value="">
+                    <input type="hidden" name="id" id="checkId" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="Url(this)" class="btn btn-warning editData"  value="">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--modal-->
+
+    <!--删除-->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="deleteModalLabel">删除数据</h4>
+                </div>
+                <div class="modal-body">
+                    <b>商品ID：</b>
+                    <input type="text" class="form-control" id="delUrl"
+                           value="" readonly>
+                    <input type="hidden" name="id" id="delId" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="delUrlId(this)" class="btn btn-danger" id="deleteData">确认删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="https://fissilestatic.taojiji.com/common/js/jquery-3.3.1.min.js"></script>
+<script src="https://fissilestatic.taojiji.com/common/js/bootstrap.min.js"></script>
+<script>
+    var localUrl=location.origin
+
+
+    function isInteger(x) {
+        x = x*1;
+        return (typeof x === 'number') && (x % 1 === 0);
+    }
+
+    function params(goods_id,sort){
+        if(!isInteger(goods_id) || !isInteger(sort)){
+            alert('数据异常');
+            return;
+        }
+        if((goods_id).toString().length>11 || (sort).toString().length>11){
+            alert('数据长度异常');
+            return;
+        }
+    }
+
+    var add = document.getElementById('addData');
+    add.onclick = function(){
+        var  goods_id = document.getElementById('inputGoodsId').value;
+        var  sort = document.getElementById('inputSort').value;
+
+//        params(goods_id,sort)
+        if(!isInteger(goods_id) || !isInteger(sort)){
+            alert('数据异常');
+            return;
+        }
+        if((goods_id).toString().length>11 || (sort).toString().length>11){
+            alert('数据长度异常');
+            return;
+        }
+        send(goods_id,sort)
+
+    }
+
+
+    function send(goods_id,sort){
+        $.ajax({
+            type:'post',
+            url:localUrl+'/index.php/index/Goods/addData',
+            data: {
+                goods_id: goods_id ,
+                sort: sort
+            },
+            dataType: 'json',
+            success:function(data){
+                if(data.result==1){
+                    //alert(data.message);
+                    window.location.replace(localUrl+'/index.php/index/Goods/alipayIdList');
+                }else{
+                    alert(data.message);
+                }
+            },
+            error:function(){
+                alert('ajax错误请重试'.error);
+            }
+        });
+    }
+    
+    function changeUrl(self){
+        $('#editUrl').val($(self).attr('value'))
+        $('#editTitle').val($(self).attr('title'))
+        $('#checkId').val($(self).attr('editId'))
+    }
+
+    function Url(self){
+        id=document.getElementById('checkId').value
+        e_sort=document.getElementById('editUrl').value
+        e_id=document.getElementById('editTitle').value
+        console.log(e_sort)
+        console.log(e_id)
+
+        if(!isInteger(e_id) || !isInteger(e_sort)){
+            alert('数据异常');
+            return;
+        }
+        if((e_id).toString().length>11 || (e_sort).toString().length>11){
+            alert('数据长度异常');
+            return;
+        }
+        editData(id,e_id,e_sort,1)
+    }
+
+
+    function editData(id,e_id,e_sort,type){
+        $.ajax({
+            type:'post',
+            url:localUrl+'/index.php/index/Goods/editData',
+            data: {
+                goods_id: e_id ,
+                sort: e_sort ,
+                id:id,
+                type:type
+            },
+            dataType: 'json',
+            success:function(data){
+                if(data.result==1){
+                    window.location.replace(localUrl+'/index.php/index/Goods/alipayIdList');
+                }else{
+                    alert(data.message);
+                }
+            },
+            error:function(){
+                alert('ajax错误请重试');
+            }
+        });
+    }
+
+    function delUrl(self){
+        $('#delUrl').val($(self).attr('value'))
+        $('#delId').val($(self).attr('delId'))
+    }
+    function delUrlId(self){
+        id=document.getElementById('delId').value
+        editData(id,'','','')
+    }
+
+
+</script>
+
+</body>
+
+</html>
